@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1250">
+<title>Rebuild PRPC SQL statements</title>
+<script type="text/javascript" src="../jquery-2.1.4.js"></script>
+<script type="text/javascript" src="RebuildSQL.js"></script>
+<style>
+body {
+	margin: 0;
+	padding: 20px;
+	font-family: sans-serif;
+	background-color: #F4F4FF;
+}
+
+.content {
+	border: 1px solid #CCC;
+	background-color: #F8F8F8;
+	width: 100%;
+	max-width: 1200px;
+	border-radius: 15px;
+	padding: 15px;
+}
+
+.container {
+	background-color: #EEE;
+	box-shadow: 10px 10px 15px #888888;
+	border-radius: 25px;
+	padding: 15px;
+}
+
+.input {
+	width: 100%;
+	max-width: 1200px;
+	box-shadow: 10px 10px 15px #888888;
+}
+
+.result {
+	font-weight: bold;
+	font-family: sans-serif;
+	font-size: 16px;
+	white-space: pre;
+	width: 8000px;
+	overflow: auto;
+	box-shadow: 10px 10px 15px #888888;
+}
+
+.output {
+	width: 100%;
+	overflow-y: auto;
+	max-height: 400px;
+	padding: 10px;
+}
+
+.smallNote {
+	font-size: smaller;
+	color: gray;
+}
+
+td {
+	vertical-align: top;
+	padding-bottom: 20px;
+}
+
+.label {
+	color: gray;
+	padding: 0px 10px 0px 0px;
+}
+
+.hidden {
+	display: none;
+}
+
+.history {
+	width: 100%;
+	margin-left: 40px;
+	max-height: 1200px;
+	max-width: 400px;
+	overflow: visible;
+	border-top: 1px solid #BBE;
+	border-bottom: 1px solid #BBE;
+	background: #EEF;
+}
+.history img {
+	cursor: pointer;
+	padding: 4px;
+}
+.history td {
+	padding: 0;
+}
+.history tr:nth-child(even) {
+	background: #F5F5FF;
+}
+.historyElement {
+	cursor: text;
+	min-width: 220px;
+	padding: 4px;
+}
+</style>
+</head>
+<body>
+	<table align="center">
+		<tr>
+			<td><img src="pegalogo.png" width="100px" /></td>
+			<td>
+				<h1 style="text-align: center">Rebuild PRPC SQL statements</h1>
+			</td>
+		</tr>
+	</table>
+	<table align="center">
+		<tr>
+			<td class="label">Example:</td>
+			<td>
+				<div style="position: relative">
+					<img src="Instructions.png" /><br /> <img src="arrow.png" style="position: absolute; left: 900px; top: 0px" width="200px" />
+				</div>
+				<span class="smallNote">Start from and <u>include</u> the "<b>SQL</b>" label when selecting the text to copy. Include also the "<b>SQL Inserts</b>" and
+					following parameters.<br /> Paste the text in the following text area and <u>do not</u> break the pasted text with new lines.<br/>				
+					SQL and SQL Inserts can be also copied from the log files, be sure the whole SQL statement stays in a its own single row, without any line break.<br/>
+					Be sure also that the whole SQL Inserts stay in a single row  without any line break.<br/>
+				</span>
+			</td>
+		</tr>
+		<tr>
+			<td class="label">Tracer output:</td>
+			<td><textarea class="input content" rows="10" cols="20" id="tracer"></textarea></td>
+			<td rowspan="5">
+				<div id="historyContainer" class="hidden">
+					<p style="margin: 4px 40px" class='label'>History</p>
+					<table class='history' id='history' border='0' cellspacing='0'></table>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td class="label">&nbsp;</td>
+			<td>
+				<p>
+					Copy the <b>SQL</b> and <b>SQL Inserts</b> rows from the tracer as in the example, paste them in the "Tracer output" text area and click on
+					<input style="padding: 5px 20px 5px 20px" type="button" value="Translate" id="btnTranslate"/>
+				</p>
+			</td>
+		</tr>
+		<tr>
+			<td class="label">
+				Result:<br/>
+				<input style="margin: 10px 0;padding: 5px 20px 5px 20px" class="hidden" type="button" value="Select all" id="btnSelectAll"/>
+			</td>
+			<td>
+				<textarea rows="15" class="output content result" id="result" readonly="readonly"></textarea>
+			</td>
+		</tr>
+		<tr>
+			<td class="label">Statement:</td>
+			<td>
+				<div class="output content" id="sql"></div>
+			</td>
+		</tr>
+		<tr>
+			<td class="label">Values:</td>
+			<td>
+				<div class="output content" id="values"></div>
+			</td>
+		</tr>
+		<tr>
+			<td class="label">&nbsp;</td>
+			<td><span class="smallNote">
+				<br />
+				<br /> Tested with Chrome, IE 11 and Firefox<br />
+				<br />
+				</span>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

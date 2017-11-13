@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>JSon Inspection</title>
+<link type="text/css" rel="stylesheet" href="../include/jquery.dataTables.min.css">
+<link type="text/css" rel="stylesheet" href="JSonInspection.css" />
+<link type="text/css" rel="stylesheet" href="jjsonviewer.css">
+<link type="text/css" rel="stylesheet" href="../include/jquery-ui-1.12.1/themes/base/jquery-ui.css">
+<script type="text/javascript" src="../include/jquery-2.1.4.js"></script>
+<script type="text/javascript" src="../include/jquery-ui-1.12.1/jquery-ui.js"></script>
+<script type="text/javascript" src="../include/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="jjsonviewer.js"></script>
+<script type="text/javascript" src="JSonInspection.js"></script>
+<script type="text/javascript" src="JSonInspection.utils.js"></script>
+</head>
+<body>
+
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	TOOLBAR 
+	 -->
+	<div id="toolbar" class="mainPanel">
+		<div id="buttons">
+			<button id="Btn_StartAddJSonObject">Add JSon Object</button>
+			<button id="Btn_StartSelectJSonObject">Select JSon Object</button>
+			<button id="Btn_StartJSonObjectSource">JSon Object's Source</button>
+			<button id="Btn_StartEnterScript">Execute Script</button>
+			<button id="Btn_StartDocumentation">Documentation</button>
+		</div>
+		<div id="search">
+			<table border="0" cellspacing="0">
+				<tr>
+					<td><input id="Text_Search" type="text" placeholder="Search..." /></td>
+					<td><img id="Btn_Search" src="search_24x24.png" /></td>
+				</tr>
+			</table>
+		</div>
+		<div id="uiTools">
+			<img id="Btn_ToggleSidebar" class="button" src="ToggleLeftSidebar_32x32.png" title="Toggle left sidebar" />
+			<!--  -->
+			<img id="Btn_StartUpload" class="button" src="upload-32x32.png" title="Upload objects" />
+			<!--  -->
+			<img id="Btn_Download" class="button" src="download-32x32.png" title="Download objects" />
+		</div>
+	</div>
+
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	WORK AREA 
+	 -->
+	<div id="screen" class="noScroll">
+
+		<div id="jsonObject">
+			<div id="searchResult"></div>
+			<div id="jjson" class="jjson"></div>
+		</div>
+
+		<div id="workArea">
+			<div id="output"></div>
+		</div>
+
+	</div>
+
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	PANELS
+	 -->
+	<div id="Dialog_EnterScript" class="panel">
+		<textarea id="Text_Script" rows="20" style="width: 100%"></textarea>
+		<div id="executeError" class="error"></div>
+		<div>
+			<button id="Btn_OkEnterScript">Execute</button>
+			<button id="Btn_CancelEnterScript">Close</button>
+		</div>
+	</div>
+
+	<div id="Dialog_Upload" class="panel">
+		<input id="jsonFile" type="file" />
+		<div id="uploadError" class="error"></div>
+		<div>
+			<button id="Btn_OkUpload">Upload</button>
+			<button id="Btn_CancelUpload">Close</button>
+		</div>
+	</div>
+
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	DIALOGS 
+	 -->
+	<div id="Dialog_AddJSonObject" class="dialog">
+		<div class="mainPanel">
+			<table class="fullSize">
+				<tr>
+					<td><b>Add JSon Object</b><br />
+						<table style="width: 100%">
+							<tr>
+								<td width="200px" style="white-space: nowrap;">Object Name:</td>
+								<td width="100%"><input type="text" name="ObjectName" id="Text_ObjectName" style="width: 100%" /></td>
+							</tr>
+						</table></td>
+				</tr>
+				<tr>
+					<td style="height: 100%"><textarea id="Text_JSon" class="fullSize"></textarea></td>
+				</tr>
+				<tr>
+					<td>
+						<div id="Error_AddJSonObject" class="error"></div>
+						<div>
+							<button id="Btn_OkAddJSonObject">Add</button>
+							<button id="Btn_CancelAddJSonObject">Cancel</button>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+
+	<div id="Dialog_SelectJSonObject" class="dialog">
+		<div class="mainPanel">
+			<table class="fullSize">
+				<tr>
+					<td><b>Select JSon Object</b><br /></td>
+				</tr>
+				<tr>
+					<td style="height: 100%" valign="top">
+						<div id="List_Objects"></div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div>
+							<button id="Btn_CancelSelectJSonObject">Cancel</button>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+
+	<div id="Dialog_JSonObjectSource" class="dialog">
+		<div class="mainPanel">
+			<table class="fullSize">
+				<tr>
+					<td><b>JSon Object's Source Code</b><br /></td>
+				</tr>
+				<tr>
+					<td style="height: 100%" valign="top"><textarea id="Text_JSonSource" class="fullSize" disabled="disabled"></textarea></td>
+				</tr>
+				<tr>
+					<td>
+						<div>
+							<button id="Btn_ToggleJSonObjectSource">Change source mode</button>
+							<button id="Btn_CancelJSonObjectSource">Close</button>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	DOCUMENTATION 
+	 -->
+	<div id="Dialog_Documentation" class="dialog">
+		<div class="mainPanel">
+			<table class="fullSize">
+				<tr>
+					<td><b>Documentation</b><br /></td>
+				</tr>
+				<tr>
+					<td style="height: 100%" valign="top">
+						<div id="documentation">
+							<h1>Javascript</h1>
+							<p>
+								Use the keyword <b>this</b> to access the currently selected object.
+							</p>
+							<p>Use global variables to store temporary results that you need in other scripts.</p>
+							<p>
+								Identifiers starting with <b>JSI_</b> are reserved and should not be used.
+							</p>
+							<p>
+								The <b>OBJ</b> object is reserverd. It contains all the objects added to the tool and allows to reference them by name.<br /> Examples: <b>OBJ.ID1</b>, <b>OBJ.MyObject</b>,
+								<b>OBJ["Name with spaces"]</b>, <b>OBJ["Names-with-no-id-chars"]</b>
+							</p>
+							<h2>Functions</h2>
+							<table class="helpTable">
+								<tr>
+									<th>Function</th>
+									<th>Description</th>
+								</tr>
+								<tr>
+									<td><b>JSI_DIFF(object1, object2, ....)</b></td>
+									<td>Difference between objects.<br /> Return an array of objects with properties which differ in the passed objects.<br /> Properties with the same values
+										are not reported.<br /> Show as a table to better view.
+									</td>
+								</tr>
+								<tr>
+									<td><b>JSI_COUNT(objectsArray, fieldsArray)</b></td>
+									<td>For each object in the given objectsArray evaluates the fields specified in the fieldsArray.<br /> Returns an array of objects containing the different
+										evaluated values and the count for each combination of values.<br /> Show as a table to better view.
+									</td>
+								</tr>
+								<tr>
+									<td><b>JSI_FILTER(objectsArray, condition)</b></td>
+									<td>Filter the given objectsArray returning only the objects fulfilling the given condition.<br /> The condition can be expressed as a string or through a
+										function.<br /> If the condition is expressed as a string, use the <b>this</b> keyword to refer to the current object in the list.<br /> If the condition is
+										expressed with a function, the first parameter is the current object and the second parameter is the index.<br /> Returns an array containing the selected
+										objects. The initial array is left unchanged.<br /> Show as a table to better view.
+									</td>
+								</tr>
+							</table>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div>
+							<button id="Btn_CancelDocumentation">Close</button>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</body>
+</html>
